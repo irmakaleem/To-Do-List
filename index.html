@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="/src/output.css" />
+    <title>to-do-list</title>
+  </head>
+  <body>
+    <section class="main">
+      <div
+        class="container p-10 bg-white max-w-96 min-h-52 flex flex-col gap-3"
+      >
+        <div id="add-task-container" class="flex">
+          <label for="addtaskinput" class="flex">
+            <input
+              type="text"
+              name="addtaskinput"
+              id="addtaskinput"
+              placeholder="Enter A Task"
+              class="border-2 border-slate-200 p-1 focus:border-2 focus:border-slate-400 outline-none focus:px-2"
+            />
+          </label>
+          <button
+            type="button"
+            id="addBtn"
+            class="bg-slate-800 text-white w-full flex justify-center p-1"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            id="editBtn"
+            class="bg-slate-800 text-white w-full justify-center p-1 hidden"
+          >
+            <img src="images/icons/edit.png" alt="edit" />
+          </button>
+        </div>
+        <div id="tasks-container" class="flex flex-col gap-2 divide-y-2"></div>
+      </div>
+    </section>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -35,7 +35,7 @@ function addingEventListeners() {
 
 //ADDING TASKS
 async function addTasks() {
-  const value = addtaskinput.value;
+  const value = addtaskinput.value.trim();
   if (value !== "") {
     tasks.push(value);
     const stringified = JSON.stringify(tasks);
@@ -57,14 +57,18 @@ async function addTaskInHtml() {
       tasksContainer.innerHTML += `
               <div id="addedtask-${
                 index + 1
-              }" class="flex items-center pt-2 justify-between w-full">
+              }" class="flex transition-all duration-700 items-center p-2 justify-between w-full">
               <label for="taskbox" class="flex items-center gap-3 relative">
                   <input type="checkbox" name="taskbox" id="taskbox">
-                 ${task}
+                 <span>${task}</span>
               </label>
               <div id="btnContainer" class="flex gap-2">
                   <button class="edit">
                   <img src="/images/icons/edit.png" alt="" class="size-5">
+                  
+                  </button>
+                  <button class="cross hidden">
+                  <img src="/images/icons/cross.png" alt="" class="size-5">
                   </button>
                   <button class="deleteBtn">
                   <img src="/images/icons/delete.png" alt="" class="size-5">
@@ -107,45 +111,95 @@ function deleteTasks(e) {
 
 //EDITING TASKS
 function editTasks(e) {
-  // selecting addedtask div
-  const addedTaskContainer = e.target.parentElement.parentElement.parentElement;
+  // selecting image icon
+  const editIcon = e.target;
+  //selecting next element through parent element(button) which is cross button
+  const crossBtn = editIcon.parentElement.nextElementSibling;
+  //removing editicon
+  editIcon.classList.add("hidden");
+  //adding cross icon
+  crossBtn.classList.remove("hidden");
+  //selecting addtask div
+  const addedTaskContainer = editIcon.parentElement.parentElement.parentElement;
   //highlighting the edit task line
-  addedTaskContainer.style.background = "red";
+  addedTaskContainer.classList.add("border", "border-slate-300");
   // select id attribute through getAttribute
   const idAttribute = addedTaskContainer.getAttribute("id");
   //includes is string method so if addedtask exist it returns addedtask string
   if (idAttribute.includes("addedtask")) {
-    //select label through queryselector addedTaskContainer is a row where we want to select label
-    const selectLabel = addedTaskContainer.querySelector("label");
+    //select label through queryselector addedTaskContainer is a row where we want to select label -> span
+    const selectLabel = addedTaskContainer.querySelector("label span");
     // here i select text content of selected label
     const selectLabelText = selectLabel.textContent.trim();
-
+    //assigning addtaskinput field a value (selectlabeltext)
     addtaskinput.value = selectLabelText;
+    //removing addbtn
     addBtn.classList.add("hidden");
+    //showing editbtn
     editBtn.classList.remove("hidden");
 
-    editBtn.addEventListener("click", function (e) {
-      const newValue = addtaskinput.value;
-      // foe each loop to check iteration select task and index (just numbering 0,1,2)
-      tasks.forEach((task, index) => {
-        // if task text and selected label text is same then
-        if (task === selectLabelText) {
-          // through splice we can remove the text from array (index is which element we want to remove and 1 is how many element want to remove)
-          tasks.splice(index, 1, newValue);
-          addTaskInHtml();
-          //stringify method so that array can save in local storage in the form of string
-          localStorage.setItem("tasks", JSON.stringify(tasks));
-
-          //after successfuklly eediting
-          addtaskinput.value = "";
-          addBtn.classList.remove("hidden");
-          editBtn.classList.add("hidden");
-        }
-      });
+    //crossbtn event listener
+    crossBtn.addEventListener("click", function () {
+      //showing edit icon
+      editIcon.classList.remove("hidden");
+      //removing cross btn
+      crossBtn.classList.add("hidden");
+      //showing addbtn
+      addBtn.classList.remove("hidden");
+      //removing editbtn
+      editBtn.classList.add("hidden");
+      //removing border when cross btn clicked
+      addedTaskContainer.classList.remove("border", "border-slate-300");
+      //showing empty input field when crossbtn clicked
+      addtaskinput.value = "";
+    });
+    editBtn.addEventListener("click", () => {
+      editedEventListener(
+        selectLabel,
+        selectLabelText,
+        addedTaskContainer,
+        editIcon,
+        crossBtn
+      );
     });
   } else {
     alert("click again");
   }
+}
+
+// edited eventListener
+function editedEventListener(
+  selectLabel,
+  selectLabelText,
+  addedTaskContainer,
+  editIcon,
+  crossBtn
+) {
+  //assigning addtaskinput field value to newValue
+  const newValue = addtaskinput.value.trim();
+  // foe each loop to check iteration select task and index (just numbering 0,1,2)
+  tasks.forEach((task, index) => {
+    // if task text and selected label text is same then
+    if (task === selectLabelText) {
+      // through splice we can remove the text from array (index is which element we want to remove and 1 is how many element want to remove)
+      tasks.splice(index, 1, newValue);
+      selectLabel.textContent = newValue;
+      //stringify method so that array can save in local storage in the form of string
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+
+      //after successfuklly eediting
+      addtaskinput.value = "";
+      //showing edit icon
+      editIcon.classList.remove("hidden");
+      //removing cross btn
+      crossBtn.classList.add("hidden");
+
+      addedTaskContainer.classList.remove("border", "border-slate-300");
+
+      addBtn.classList.remove("hidden");
+      editBtn.classList.add("hidden");
+    }
+  });
 }
 
 function doneTasks(e) {

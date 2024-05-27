@@ -10,12 +10,17 @@ body {
   display: grid;
   place-items: center;
 }
-label.active::before {
+label::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  height: 100px;
-  width: 100px;
+  top: 50%;
+  right: 0;
+  height: 2px;
+  width: 0;
   background-color: black;
+  transition: width 0.5s ease-in;
+}
+
+label.active::before {
+  width: 65%;
 }

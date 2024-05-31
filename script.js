@@ -7,6 +7,7 @@ const parsedLocalStorageTasks = localstoragetasks
   : [];
 const tasks = parsedLocalStorageTasks.length > 0 ? parsedLocalStorageTasks : [];
 const tasksContainer = document.getElementById("tasks-container");
+const searchBar = document.getElementById("searchBar");
 
 document.addEventListener("DOMContentLoaded", async function () {
   addBtn.addEventListener("click", addTasks);
@@ -31,6 +32,9 @@ function addingEventListeners() {
   checkboxArray.forEach((checkbox) => {
     checkbox.addEventListener("change", doneTasks);
   });
+
+  //Search tasks
+  searchBar.addEventListener("input", searchTasks);
 }
 
 //ADDING TASKS
@@ -50,19 +54,22 @@ async function addTasks() {
 }
 //ADDING TASKS IN HTML
 
-async function addTaskInHtml() {
+async function addTaskInHtml(filteredTasks) {
   tasksContainer.innerHTML = "";
-  if (tasks.length > 0) {
-    tasks.forEach((task, index) => {
+  //this statement will display filtertasks if user search any task otherwise display all tasks
+  const Displaysearchtasks = filteredTasks || tasks;
+
+  if (Displaysearchtasks.length > 0) {
+    Displaysearchtasks.forEach((task, index) => {
       tasksContainer.innerHTML += `
               <div id="addedtask-${
                 index + 1
-              }" class="flex transition-all duration-700 items-center p-2 justify-between w-full">
-              <label for="taskbox" class="flex items-center gap-3 relative">
+              }" class="grid grid-cols-12 added-task transition-all duration-700 items-center p-2 justify-between w-full">
+              <label for="taskbox" class="flex items-center gap-3 col-span-10 w-full">
                   <input type="checkbox" name="taskbox" id="taskbox">
-                 <span>${task}</span>
+                 <span class="relative">${task}</span>
               </label>
-              <div id="btnContainer" class="flex gap-2">
+              <div id="btnContainer" class="flex gap-2 col-span-2">
                   <button class="edit">
                   <img src="/images/icons/edit.png" alt="" class="size-5">
                   
@@ -92,7 +99,7 @@ function deleteTasks(e) {
     const selectLabel = addedTaskContainer.querySelector("label");
     // here i select text content of selected label
     const selectLabelText = selectLabel.textContent.trim();
-    // foe each loop to check iteration select task and index (just numbering 0,1,2)
+    // for each loop to check iteration select task and index (just numbering 0,1,2)
     tasks.forEach((task, index) => {
       // if task text and selected label text is same then
       if (task === selectLabelText) {
@@ -177,17 +184,17 @@ function editedEventListener(
 ) {
   //assigning addtaskinput field value to newValue
   const newValue = addtaskinput.value.trim();
-  // foe each loop to check iteration select task and index (just numbering 0,1,2)
+  // for each loop to check iteration select task and index (just numbering 0,1,2)
   tasks.forEach((task, index) => {
     // if task text and selected label text is same then
     if (task === selectLabelText) {
-      // through splice we can remove the text from array (index is which element we want to remove and 1 is how many element want to remove)
+      // through splice we can remove the text from array (index is which element we want to remove and 1 is how many element want to remove), new value is replace
       tasks.splice(index, 1, newValue);
       selectLabel.textContent = newValue;
       //stringify method so that array can save in local storage in the form of string
       localStorage.setItem("tasks", JSON.stringify(tasks));
 
-      //after successfuklly eediting
+      //after successfully editing
       addtaskinput.value = "";
       //showing edit icon
       editIcon.classList.remove("hidden");
@@ -210,4 +217,23 @@ function doneTasks(e) {
   } else {
     selectLabel.classList.remove("active");
   }
+}
+
+function searchTasks() {
+  const searchValue = searchBar.value;
+  const filteredTasks = tasks.filter((task) => task.includes(searchValue));
+  const addedTasks = document.querySelectorAll(".added-task");
+  const addedTaskLabelSpan = document.querySelectorAll(
+    ".added-task label span"
+  );
+  addedTaskLabelSpan.forEach((span, index) => {
+    const spanText = span.textContent;
+    if (!filteredTasks.includes(spanText)) {
+      const filteredAddedTasks = span.parentElement.parentElement;
+      filteredAddedTasks.style.display = "none";
+    } else {
+      const filteredAddedTasks = span.parentElement.parentElement;
+      filteredAddedTasks.style.display = "grid";
+    }
+  });
 }

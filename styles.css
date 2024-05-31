@@ -10,7 +10,7 @@ body {
   display: grid;
   place-items: center;
 }
-label::before {
+label span::before {
   content: "";
   position: absolute;
   top: 50%;
@@ -21,6 +21,6 @@ label::before {
   transition: width 0.5s ease-in;
 }
 
-label.active::before {
-  width: 65%;
+label.active span::before {
+  width: 100%;
 }

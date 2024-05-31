@@ -8,6 +8,12 @@ const parsedLocalStorageTasks = localstoragetasks
 const tasks = parsedLocalStorageTasks.length > 0 ? parsedLocalStorageTasks : [];
 const tasksContainer = document.getElementById("tasks-container");
 const searchBar = document.getElementById("searchBar");
+const searchBtn = document.getElementById("searchBtn");
+
+searchBtn.addEventListener("click", function () {
+  searchBtn.classList.toggle("active");
+  searchBar.classList.toggle("active");
+});
 
 document.addEventListener("DOMContentLoaded", async function () {
   addBtn.addEventListener("click", addTasks);
@@ -27,6 +33,7 @@ function addingEventListeners() {
   deleteBtnArray.forEach((del) => {
     del.addEventListener("click", deleteTasks);
   });
+
   //done tasks
   const checkboxArray = document.querySelectorAll("input[type=checkbox]");
   checkboxArray.forEach((checkbox) => {

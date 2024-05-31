@@ -24,3 +24,24 @@ label span::before {
 label.active span::before {
   width: 100%;
 }
+
+/*search bar*/
+#searchBar {
+  width: 0;
+  transition: width 0.5s 0.2s ease-in;
+}
+
+#searchBar.active {
+  width: 89%;
+  border: 2px solid slateblue;
+}
+/* 
+#searchBtn {
+  position: absolute;
+  top: 40px;
+  right: 42px;
+  transition: top 0.5s ease-in;
+}
+#searchBtn.active {
+  top: 85px;
+} */
